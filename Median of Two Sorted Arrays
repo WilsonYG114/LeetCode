@@ -1,0 +1,92 @@
+/*
+Strategy for this question:
+Step1: Merge sort 2 given array into single array and check for array length
+Step2: seperate sorted array into 2 section array a and array b via the array length by diving sorted array length
+Step3 :if length is even it we will take the last element on array a and first element of array b divide it by 2 to get median
+Step4 : if length is odd we will store first set of element into a and subtract it to the sorted array then we will skip one element (middle element) 
+then subtract element of sorted array from array b and the middle value will be our median.
+*/
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        // merge sort 2 given array
+        int[] arr = new int[nums1.length + nums2.length];
+        int z = 0, j = 0, k = 0;
+
+        while (z < nums1.length && j < nums2.length)
+            arr[k++] = nums1[z] < nums2[j] ? nums1[z++] :  nums2[j++];
+
+        while (z < nums1.length)
+            arr[k++] = nums1[z++];
+
+        while (j < nums2.length)
+            arr[k++] = nums2[j++];
+
+      //method for even length array
+        if(arr.length %2 == 0)
+        {
+            int arrlength = arr.length/2;
+            int []a = new int[arrlength];
+            int []b = new int[arrlength];
+            for(int i=0; i<arrlength; i++)
+            {
+                a[i] = arr[i];
+            }
+
+            for(int i=0; i<arrlength; i++)
+            {
+                b[i] = arr[(arrlength)+i];
+            }
+            // taking the last element of array a and first element of array b divide by 2 to get median
+            double median = (double)(a[arrlength-1] + b[0]) /2;
+            return median;
+        }
+
+        // median for odd length array
+        if(arr.length %2 != 0)
+        {
+           // odd length
+            int length = arr.length/2;
+            int [] a = new int[length];
+            int [] b = new int[length];
+
+            // loading first part of array into array a
+            for (int i =0; i<length;i++)
+            {
+                a[i] = arr[i];
+            }
+
+            // load second part of array into array b
+            // need index last two element from array to first two element from array b
+            int counter=-1;
+            for(int i = b.length+1; i<arr.length; i++)
+            {
+               counter++;
+              b[counter] = arr[i];
+            }
+
+            // removes section a element from arr
+            for(int i =0; i<a.length; i++)
+            {
+                arr[i] -= a[i];
+            }
+            
+            // remove section b element from arr
+            int counterb =-1;
+            for(int i =b.length+1; i<arr.length; i++)
+            {
+                counterb++;
+                arr[i] = b[counterb]-arr[i];
+            }
+            // this will find median by adding sum of array
+            int sum = 0;
+            for(int i =0; i<arr.length;i++)
+            {
+                sum += arr[i];
+            }
+            
+            return sum;
+
+        }
+        return 0;
+    }
+}
